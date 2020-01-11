@@ -1,4 +1,4 @@
-FROM openjdk:8-windowsservercore
+FROM openjdk:8-jdk-alpine
 
 COPY build/libs/demo-service-0.0.1-SNAPSHOT.jar /demo.jar
 
