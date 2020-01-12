@@ -15,8 +15,7 @@ pipeline {
 	 
 	   stage('Gradle Build'){
 	        steps{
-	     	  sudo 'chmod +x ./gradlew'
-		      sh './gradlew clean build'
+	     	  sh './gradlew clean build'
 	        }
 	   }
 
