@@ -8,7 +8,7 @@ pipeline {
     stages {
 	    stage ('Cloning Git Repository') {
             steps {
-                git clone 'ssh://git@github.com:sameershukla/cloud_devops_microservice.git'
+                git 'ssh://git@github.com:sameershukla/cloud_devops_microservice.git'
             }
         }
 	    
