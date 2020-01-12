@@ -15,7 +15,7 @@ pipeline {
 
 		stage ('Build Repo') {
             steps {
-                sh 'gradle clean build -x test'
+                sh '../gradle clean build -x test'
             }
         }
 
