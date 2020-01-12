@@ -8,7 +8,7 @@ pipeline {
     stages {
 	    stage ('Cloning Git Repository') {
             steps {
-                git 'ssh://git@github.com/sameershukla/cloud_devops_microservice.git'
+                git clone 'https://github.com/sameershukla/cloud_devops_microservice'
             }
         }
 	    
@@ -18,7 +18,7 @@ pipeline {
 	     	  sudo 'chmod +x ./gradlew'
 		      sh './gradlew clean build'
 	        }
-	    }
+	   }
 
 	
         stage('Building Docker image') {
