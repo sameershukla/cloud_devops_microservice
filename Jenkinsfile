@@ -6,20 +6,19 @@ pipeline {
 
     agent any
     stages {
-	
-        stage ('Cloning Git Repository') {
+	    stage ('Cloning Git Repository') {
             steps {
-                git clone https://github.com/sameershukla/cloud_devops_microservice
+                git clone 'ssh://git@github.com:sameershukla/cloud_devops_microservice.git'
             }
         }
 	    
 	 
-	stage('Gradle Build'){
-	    steps{
-	     	sudo 'chmod +x ./gradlew'
-		    sh './gradlew clean build'
+	   stage('Gradle Build'){
+	        steps{
+	     	  sudo 'chmod +x ./gradlew'
+		      sh './gradlew clean build'
+	        }
 	    }
-	}
 
 	
         stage('Building Docker image') {
