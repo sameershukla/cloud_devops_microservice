@@ -12,9 +12,15 @@ pipeline {
                 git 'https://github.com/sameershukla/cloud_devops_microservice.git'
             }
         }
+	    
+	 
+	stage('Gradle Build'){
+	    steps{
+	  	sh './gradlew clean build'
+	    }
+	}
 
 	
-
         stage('Building Docker image') {
             steps {
                 script {
