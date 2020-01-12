@@ -15,7 +15,7 @@ pipeline {
 
 	stage ('Build Repo') {
             steps {
-		tool name: 'gradle-4.7", type: gradle    
+		tool name: 'gradle-4.7', type: gradle    
                 sh 'gradle clean build -x test'
             }
         }
