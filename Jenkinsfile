@@ -24,6 +24,7 @@ pipeline {
         stage('Building Docker image') {
             steps {
                 script {
+		    sudo -i
                     sh 'docker build --tag sshukla30/capstone .'
                 }
             }
