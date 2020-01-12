@@ -13,13 +13,7 @@ pipeline {
             }
         }
 
-	stage ('Build Repo') {
-            steps {
-		tool name: 'gradle-4.4.1', type: 'gradle'
-                sh 'gradle clean build -x test'
-            }
-        }
-
+	
 
         stage('Building Docker image') {
             steps {
