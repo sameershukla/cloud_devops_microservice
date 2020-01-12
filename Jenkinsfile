@@ -6,11 +6,19 @@ pipeline {
 
     agent any
     stages {
+	
         stage ('Cloning Git Repository') {
             steps {
                 git 'https://github.com/sameershukla/cloud_devops_microservice.git'
             }
         }
+
+		stage ('Build Repo') {
+            steps {
+                sh 'gradle clean build -x test'
+            }
+        }
+
 
         stage('Building Docker image') {
             steps {
