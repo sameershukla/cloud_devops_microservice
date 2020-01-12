@@ -16,7 +16,8 @@ pipeline {
 	 
 	stage('Gradle Build'){
 	    steps{
-	  	sh './gradlew clean build'
+	  	sudo chmod +x ./gradlew
+		sh './gradlew clean build'
 	    }
 	}
 
@@ -24,8 +25,7 @@ pipeline {
         stage('Building Docker image') {
             steps {
                 script {
-		    sudo -i
-                    sh 'docker build --tag sshukla30/capstone .'
+	          sh 'docker build --tag sshukla30/capstone .'
                 }
             }
         }
