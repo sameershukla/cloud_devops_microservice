@@ -9,14 +9,14 @@ pipeline {
 	
         stage ('Cloning Git Repository') {
             steps {
-                git 'https://github.com/sameershukla/cloud_devops_microservice.git'
+                git clone 'https://github.com/sameershukla/cloud_devops_microservice.git'
             }
         }
 	    
 	 
 	stage('Gradle Build'){
 	    steps{
-	     	'sudo chmod +x ./gradlew'
+	     	sudo 'chmod +x ./gradlew'
 		    sh './gradlew clean build'
 	    }
 	}
