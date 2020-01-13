@@ -32,9 +32,17 @@ pipeline {
             steps {
                 script {
                    withDockerRegistry([ credentialsId: "Docker", url: "https://registry.hub.docker.com/sshukla30/capstone:latest" ]) {
-					 sh "docker login -u sshukla30 -p Samatdocker30#"
+					 sh "docker login -u username -p password"
                      sh 'docker push docker.io/sshukla30/capstone:latest'
                     }
+                }
+            }
+        }
+		
+		stage('Run Docker Image') {
+            steps {
+                script {
+	              sh 'docker run -d sshukla30/capstone'
                 }
             }
         }
