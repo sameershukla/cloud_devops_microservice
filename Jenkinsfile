@@ -33,7 +33,7 @@ pipeline {
                 script {
                    withDockerRegistry([ credentialsId: "Docker", url: "https://registry.hub.docker.com/sshukla30/capstone:latest" ]) {
 					 sh "docker login -u username -p password"
-                     sh 'docker push sshukla30/capstone'
+                     sh 'docker push docker.io/sshukla30/capstone:latest'
                     }
                 }
             }
