@@ -31,7 +31,7 @@ pipeline {
         stage('Deploy Docker Image') {
             steps {
                 script {
-                    withDockerRegistry([ credentialsId: "docker-hub", url: "" ]) {
+                   withDockerRegistry([ credentialsId: "Docker", url: "https://registry.hub.docker.com/sshukla30/capstone:latest" ]) {
 					 sh "docker login -u username -p password"
                      sh 'docker push sshukla30/capstone'
                     }
