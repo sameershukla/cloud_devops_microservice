@@ -23,7 +23,7 @@ pipeline {
         stage('Building Docker image') {
             steps {
                 script {
-	          sh 'docker build --tag sshukla30/capstone .'
+	              sh 'docker build --tag sshukla30/capstone .'
                 }
             }
         }
@@ -31,10 +31,9 @@ pipeline {
         stage('Deploy Docker Image') {
             steps {
                 script {
-                    withDockerRegistry([ credentialsId: "docker-hub", url: "" ]) {
-                    sh 'docker push sshukla30/capstone'
-                    }
-                }
+					sh "docker login -u username -p password"
+					sh "docker push sshukla30/capstone"
+				}
             }
         }
      }
