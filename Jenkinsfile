@@ -48,7 +48,7 @@ pipeline {
 		stage('Blue Deployment') {
             steps {
                 script {
-                  withCredentials(credentials: 'aws-key', region: 'us-east-2'){
+                  withAWS(credentials: 'aws-key', region: 'us-east-2'){
                             sh "aws eks --region us-east-2 update-kubeconfig --name nginx"
                             sh 'kubectl apply -f blue.yaml'
                   }
