@@ -48,9 +48,11 @@ pipeline {
 		 stage ('Blue') {
             steps {
                script {
-                   // Latest
-                   sh 'aws eks --region eu-west-1 update-kubeconfig --name nginx'
-                   sh 'kubectl apply -f ./blue.yml'
+                    withAWS(credentials: 'aws-key', region: 'us-east-2') {
+                            sh "aws eks --region eu-west-1 update-kubeconfig --name nginx"
+                            sh 'kubectl apply -f blue.yaml'
+                        }
+                    }
                }
             }
         }
