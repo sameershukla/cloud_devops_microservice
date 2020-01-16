@@ -45,14 +45,9 @@ pipeline {
             }
         }
 		
-		stage('Blue Deployment') {
+		stage('kubectl contexts') {
             steps {
-                script {
-                  withAWS(credentials: 'aws-key', region: 'us-east-2'){
-                            sh "aws eks --region us-east-2 update-kubeconfig --name nginx"
-                            sh 'kubectl apply -f blue.yaml'
-                  }
-	            }
+                sh "kubectl get pods"
             }
         }
      }
