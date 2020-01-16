@@ -45,9 +45,11 @@ pipeline {
             }
         }
 		
-		stage('kubectl contexts') {
+		stage('Blue Deployment') {
             steps {
-                sh "kubectl get pods"
+                script {
+                     sh 'kubectl apply -f blue.yaml'
+                }
             }
         }
      }
