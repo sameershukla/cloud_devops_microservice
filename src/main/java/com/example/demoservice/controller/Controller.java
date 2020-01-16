@@ -13,6 +13,6 @@ public class Controller {
 
 	@GetMapping(value="/student")
 	public String endpoint(){
-		return "Hello World"
+		return "Hello World";
 	}
 }
