@@ -44,7 +44,7 @@ pipeline {
                 }
             }
         }
-		
+		 
 		 stage ('Blue') {
             steps {
                script {
