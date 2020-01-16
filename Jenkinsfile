@@ -49,7 +49,7 @@ pipeline {
             steps {
                 script {
                   withCredentials(credentials: 'aws-key', region: 'us-east-2'){
-                            sh "aws eks --region eu-west-1 update-kubeconfig --name nginx"
+                            sh "aws eks --region us-east-2 update-kubeconfig --name nginx"
                             sh 'kubectl apply -f blue.yaml'
                   }
 	            }
