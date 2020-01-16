@@ -6,20 +6,20 @@ pipeline {
 
     agent any
     stages {
-	    stage ('Cloning Git Repository') {
+	    stage ('Git Clone') {
             steps {
                 git 'https://github.com/sameershukla/cloud_devops_microservice'
             }
         }
 	    
 	 
-	   stage('Lint Step - Gradle'){
+	   stage('Linting Step - Gradle'){
 	        steps{
 		 	  sh './gradlew build'
 	        }
 	   }
 	   
-	   stage('Test'){
+	   stage('Test Execution'){
 	   		steps{
 	   		  sh './gradlew test'
 	   		}
@@ -34,7 +34,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Docker Image') {
+        stage('Deploy to Docker Hub') {
             steps {
                 script {
                    withDockerRegistry([ credentialsId: "Docker", url: "https://registry.hub.docker.com/sshukla30/capstone:latest" ]) {
@@ -45,12 +45,14 @@ pipeline {
             }
         }
 		
-		stage('Run Docker Image') {
+		 stage ('Blue') {
             steps {
-                script {
-	              sh 'docker run -d -p 5000:8081 sshukla30/capstone'
-                }
+               script {
+                   // Latest
+                   sh 'kubectl apply -f ./blue.yml'
+               }
             }
         }
+
      }
 }
