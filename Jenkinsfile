@@ -18,6 +18,12 @@ pipeline {
 		 	  sh './gradlew build'
 	        }
 	   }
+	   
+	   stage('Test'){
+	   		steps{
+	   		  sh '/gradlew test'
+	   		}
+	   }
 
 	
         stage('Building Docker image') {
@@ -32,7 +38,7 @@ pipeline {
             steps {
                 script {
                    withDockerRegistry([ credentialsId: "Docker", url: "https://registry.hub.docker.com/sshukla30/capstone:latest" ]) {
-					 sh "docker login -u username -p password"
+					 sh "docker login -u sshukla30 -p Samatdocker30#"
                      sh 'docker push docker.io/sshukla30/capstone:latest'
                     }
                 }
