@@ -45,11 +45,14 @@ pipeline {
             }
         }
 		
-		stage('Run Docker Image') {
+		stage('Blue Deployment') {
             steps {
                 script {
-	              sh 'docker run -d -p 5000:8081 sshukla30/capstone'
-                }
+                  withAWS(credentials: 'aws-key', region: 'us-east-2'){
+                            sh "aws eks --region eu-west-1 update-kubeconfig --name nginx"
+                            sh 'kubectl apply -f blue.yaml'
+                  }
+	            }
             }
         }
      }
