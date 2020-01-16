@@ -13,7 +13,7 @@ pipeline {
         }
 	    
 	 
-	   stage('Gradle Build'){
+	   stage('Lint Step - Gradle'){
 	        steps{
 		 	  sh './gradlew build'
 	        }
