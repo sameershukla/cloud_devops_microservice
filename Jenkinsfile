@@ -48,7 +48,7 @@ pipeline {
 		stage('Run Docker Image') {
             steps {
                 script {
-	              sh 'docker run -d sshukla30/capstone'
+	              sh 'docker run -d -p 5000:8081 sshukla30/capstone'
                 }
             }
         }
