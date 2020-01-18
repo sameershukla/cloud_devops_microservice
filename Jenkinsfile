@@ -48,7 +48,6 @@ pipeline {
 		stage('Blue Deployment') {
             steps {
                 script {
-                     sh 'kubectl apply -f auth.yml'
                      sh 'kubectl apply -f blue.yaml'
                 }
             }
