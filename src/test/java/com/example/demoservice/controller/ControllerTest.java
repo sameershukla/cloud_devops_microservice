@@ -16,6 +16,6 @@ public class ControllerTest {
 	
 	@Test
 	public void testEndpoint() {
-		assertEquals("Hello World", controllerSpy.endpoint());
+		assertEquals("Demo Service", controllerSpy.endpoint());
 	}
 }
