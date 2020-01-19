@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
-	@GetMapping(value="/student")
+	@GetMapping(value="/demo")
 	public String endpoint(){
-		return "Hello World";
+		return "Demo Service";
 	}
 }

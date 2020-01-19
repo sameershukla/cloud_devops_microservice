@@ -33,6 +33,12 @@ pipeline {
                 }
             }
         }
+		
+	    stage('Image Scan') {
+            steps{
+               aquaMicroscanner imageName: 'sshukla30/capstone', notCompliesCmd: 'exit 4', onDisallowed: 'fail', outputFormat: 'html'
+           }
+        }
 
         stage('Deploy to Docker Hub') {
             steps {
