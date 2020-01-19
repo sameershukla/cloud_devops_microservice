@@ -50,8 +50,8 @@ pipeline {
                 script {
 				   withAWS(credentials: 'EKSADMIN', region: 'us-west-2') {
 				     sh "aws eks --region us-west-2 update-kubeconfig --name sameer-eks-1"
-				     sh 'kubectl apply -f aws-auth-cm.yaml'
-                     sh 'kubectl apply -f blue.yaml'
+				     sh 'kubectl apply -f aws-auth-cm.yml'
+                     sh 'kubectl apply -f blue.yml'
 				  }
                 }
             }
