@@ -34,17 +34,12 @@ pipeline {
             }
         }
 		
-	    stage('Image Scan') {
-            steps{
-               aquaMicroscanner imageName: 'sshukla30/capstone', notCompliesCmd: 'exit 4', onDisallowed: 'fail', outputFormat: 'html'
-           }
-        }
-
+	 
         stage('Deploy to Docker Hub') {
             steps {
                 script {
                    withDockerRegistry([ credentialsId: "Docker", url: "https://registry.hub.docker.com/sshukla30/capstone:latest" ]) {
-		              sh 'docker login -u sshukla30 -p Samatdocker30#'
+		              sh 'docker login -u username -p password'
 					  sh 'docker push docker.io/sshukla30/capstone:latest'
                     }
                 }

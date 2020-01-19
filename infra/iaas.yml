@@ -1,0 +1,217 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
+        Default: "ec2-dev"
+        AllowedValues:
+            - ec2-dev #Dev env
+            - ec2-trial #Trial Env
+            - ec2-production #Production
+
+    VpcCIDR:
+        Description: IP range 
+        Type: String
+        Default: 10.0.0.0/16
+
+    PublicSubnet1CIDR:
+        Description: IP range 
+        Type: String
+        Default: 10.0.0.0/24
+
+    PublicSubnet2CIDR:
+        Description: IP range
+        Type: String
+        Default: 10.0.1.0/24
+
+    PrivateSubnet1CIDR:
+        Description: IP range 
+        Type: String
+        Default: 10.0.2.0/24
+
+    PrivateSubnet2CIDR:
+        Description: IP range
+        Type: String
+        Default: 10.0.3.0/24
+    
+    SourceIP:
+        Description: Ip address to allow SSH access to the bastion host
+        Type: String
+        Default: 10.0.1.0/32
+    
+    EC2KeyPair:
+        Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+        Type: "AWS::EC2::KeyPair::KeyName"
+        Default: jenkins
+     
+Mappings:
+  CapstoneRegion:
+    us-east-2:
+      HVM64: ami-be7753db
+
+  
+Resources:
+    VPC:
+        Type: AWS::EC2::VPC
+        Properties:
+            CidrBlock: !Ref VpcCIDR
+            EnableDnsSupport: true
+            EnableDnsHostnames: true
+            Tags:
+                -   Key: Name
+                    Value: !Ref EnvironmentName
+    InternetGateway: 
+        Type: AWS::EC2::InternetGateway
+        Properties:
+            Tags:
+                -   Key: Name
+                    Value: !Ref EnvironmentName
+    
+    InternetGatewayAttachment:
+        Type: AWS::EC2::VPCGatewayAttachment
+        Properties:
+            InternetGatewayId: !Ref InternetGateway
+            VpcId: !Ref VPC
+    
+    PublicSubnet1:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 0, !GetAZs '' ]
+            CidrBlock: !Ref PublicSubnet1CIDR
+            MapPublicIpOnLaunch: true
+            Tags: 
+                -   Key: Name
+                    Value: !Sub ${EnvironmentName} Public Subnet (AZ1)
+
+    PrivateSubnet1:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 0, !GetAZs '' ]
+            CidrBlock: !Ref PrivateSubnet1CIDR
+            MapPublicIpOnLaunch: false
+            Tags: 
+                -   Key: Name
+                    Value: !Sub ${EnvironmentName} Private Subnet (AZ1)
+     
+    PublicSubnet2:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 1, !GetAZs '' ]
+            CidrBlock: !Ref PublicSubnet2CIDR
+            MapPublicIpOnLaunch: true
+            Tags: 
+                -   Key: Name
+                    Value: !Sub ${EnvironmentName} Public Subnet (AZ2)
+    
+    PrivateSubnet2:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 1, !GetAZs '' ]
+            CidrBlock: !Ref PrivateSubnet2CIDR
+            MapPublicIpOnLaunch: false
+            Tags: 
+                -   Key: Name
+                    Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
+    
+    NatGateway1EIP:
+        Type: AWS::EC2::EIP
+        DependsOn: InternetGatewayAttachment
+        Properties:
+            Domain: vpc
+
+    NatGateway2EIP:
+        Type: AWS::EC2::EIP
+        DependsOn: InternetGatewayAttachment
+        Properties:
+            Domain: vpc
+    
+    NatGateway1:
+        Type: AWS::EC2::NatGateway
+        Properties:
+            AllocationId: !GetAtt NatGateway1EIP.AllocationId
+            SubnetId: !Ref PublicSubnet1
+
+    NatGateway2:
+        Type: AWS::EC2::NatGateway
+        Properties:
+            AllocationId: !GetAtt NatGateway2EIP.AllocationId
+            SubnetId: !Ref PublicSubnet2
+    
+    
+    CapstoneSG:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+          GroupDescription: Allow http to ec2 and SHH access
+          VpcId: !Ref VPC
+            #Fn::ImportValue: !Ref VPC
+          SecurityGroupIngress:
+            - IpProtocol: tcp
+              FromPort: 8080
+              ToPort: 8080
+              CidrIp: 0.0.0.0/0
+            - IpProtocol: tcp
+              FromPort: 22
+              ToPort: 22
+              CidrIp: !Ref SourceIP
+          Tags:
+            - Key: Name
+              Value: !Sub ${EnvironmentName}
+   
+    
+    CapstoneEc2:
+        Type: AWS::EC2::Instance
+        Properties:
+          UserData:
+            Fn::Base64: !Sub |
+              #!/bin/bash
+              sudo apt-get update -y
+              sudo apt-get install default-jdk wget -y
+              cd /home/ubuntu
+              wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+              sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+              sudo apt-get update -y
+              sudo apt-get install jenkins tidy -y
+              sudo systemctl status jenkins
+          SecurityGroupIds:
+            - Ref: CapstoneSG
+          SubnetId: !Ref PublicSubnet1
+            #Fn::ImportValue: !Sub "${EnvironmentName}-PUB-NETS"
+          BlockDeviceMappings:
+            - DeviceName: "/dev/sdk"
+              Ebs:
+                VolumeSize: "10"
+                DeleteOnTermination: true
+                VolumeType: "gp2"
+          ImageId: !FindInMap [CapstoneRegion, !Ref "AWS::Region", HVM64]
+          InstanceType: t2.micro
+          KeyName: !Ref EC2KeyPair
+
+Outputs:
+    VPC:
+        Description: A reference to the created VPC
+        Value: !Ref VPC
+        Export:
+            Name: !Sub ${EnvironmentName}-VPCID
+    
+    PublicSubnets:
+        Description: A list of the public subnets in the project
+        Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
+        Export:
+            Name: !Sub ${EnvironmentName}-PUB-NETS
+
+    
+    PrivateSubnets:
+        Description: A list of the private subnets in the project
+        Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
+        Export:
+            Name: !Sub ${EnvironmentName}-PRIV-NETS
+    
+    Website:
+        Description: The Public DNS for the EC2 Instance
+        Value: !Join ['', ['http://', !GetAtt 'CapstoneEc2.PublicDnsName', ':8080']]
+    
