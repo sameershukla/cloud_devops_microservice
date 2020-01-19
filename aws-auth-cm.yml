@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::251620885594:role/sameer-eks-1-nodegrp-NodeInstanceRole-1FS9RTAXGWVFX
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes
+# ------------------------------------------Important commands-------------------------
+#aws eks update-kubeconfig --name nginx
+#kubectl apply -f blue.yml
+#kubectl delete deploy/web-deployment-blue svc/webapp-service

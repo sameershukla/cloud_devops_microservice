@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                    withDockerRegistry([ credentialsId: "Docker", url: "https://registry.hub.docker.com/sshukla30/capstone:latest" ]) {
-		              
+		              sh 'docker login -u sshukla30 -p Samatdocker30#'
 					  sh 'docker push docker.io/sshukla30/capstone:latest'
                     }
                 }
@@ -48,6 +48,7 @@ pipeline {
 		stage('Blue Deployment') {
             steps {
                 script {
+				     sh 'kubectl apply -f aws-auth-cm.yaml'
                      sh 'kubectl apply -f blue.yaml'
                 }
             }
