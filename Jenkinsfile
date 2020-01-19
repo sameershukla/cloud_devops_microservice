@@ -50,7 +50,7 @@ pipeline {
                 script {
 				   withAWS(credentials: 'EKSADMIN', region: 'us-west-2') {
 				     sh "aws eks --region us-west-2 update-kubeconfig --name sameer-eks-1"
-                     sh 'kubectl apply -f blue.yml'
+                     sh 'kubectl apply -f deploy-blue.yml'
 				  }
                 }
             }
@@ -61,7 +61,7 @@ pipeline {
                 script {
 				   withAWS(credentials: 'EKSADMIN', region: 'us-west-2') {
 				     sh "aws eks --region us-west-2 update-kubeconfig --name sameer-eks-1"
-                     sh 'kubectl delete deploy/blue'
+                     sh 'kubectl delete deploy/deploy-blue'
 				  }
                 }
             }
@@ -72,7 +72,7 @@ pipeline {
                 script {
 				   withAWS(credentials: 'EKSADMIN', region: 'us-west-2') {
 				     sh "aws eks --region us-west-2 update-kubeconfig --name sameer-eks-1"
-                     sh 'kubectl apply -f green.yml'
+                     sh 'kubectl apply -f deploy-green.yml'
 				  }
                 }
              } 
@@ -83,7 +83,7 @@ pipeline {
                 script {
 				   withAWS(credentials: 'EKSADMIN', region: 'us-west-2') {
 				     sh "aws eks --region us-west-2 update-kubeconfig --name sameer-eks-1"
-                     sh 'kubectl delete deploy/green'
+                     sh 'kubectl delete deploy/deploy-green'
 				  }
                 }
              } 
