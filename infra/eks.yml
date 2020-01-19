@@ -30,7 +30,7 @@ Parameters:
   ClusterName:
     Description: EKS cluster name
     Type: String
-    Default: sameer-eks
+    Default: sameer-eks-1
 
   BootstrapArguments:
     Description: Arguments to pass to the bootstrap script. See files/bootstrap.sh in https://github.com/awslabs/amazon-eks-ami
@@ -45,7 +45,7 @@ Parameters:
   NodeAutoScalingGroupDesiredCapacity:
     Description: Desired capacity of Node Group ASG.
     Type: Number
-    Default: 2
+    Default: 3
 
   KeyName:
     Description: The EC2 Key Pair to allow SSH access to the instances
@@ -345,12 +345,13 @@ Resources:
       DesiredCapacity: !Ref NodeAutoScalingGroupDesiredCapacity
       LaunchConfigurationName: !Ref NodeLaunchConfig
       MinSize: '1'
-      MaxSize: '2'
+      MaxSize: '3'
       TargetGroupARNs:
         - Ref: WebAppTargetGroup
       VPCZoneIdentifier: 
         - Ref: "Subnet01"
         - Ref: "Subnet02"
+        - Ref: "Subnet03"
       Tags:
         - Key: Name
           Value: !Sub ${ClusterName}-${NodeGroupName}-Node
