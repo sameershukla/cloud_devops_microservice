@@ -10,7 +10,3 @@ data:
       groups:
         - system:bootstrappers
         - system:nodes
-# ------------------------------------------Important commands-------------------------
-#aws eks update-kubeconfig --name nginx
-#kubectl apply -f blue.yml
-#kubectl delete deploy/web-deployment-blue svc/webapp-service
