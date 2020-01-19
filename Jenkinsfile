@@ -48,9 +48,11 @@ pipeline {
 		stage('Blue Deployment') {
             steps {
                 script {
+				   withAWS(credentials: 'EKSADMIN', region: 'us-west-2') {
 				     sh "aws eks --region us-west-2 update-kubeconfig --name sameer-eks-1"
 				     sh 'kubectl apply -f aws-auth-cm.yaml'
                      sh 'kubectl apply -f blue.yaml'
+				  }
                 }
             }
         }
